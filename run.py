@@ -6,6 +6,8 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 
+from pyasn1.type.constraint import ConstraintsExclusion
+
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -59,10 +61,10 @@ def update_worksheet(data, worksheet):
     """
     Update "worksheet" worksheet, add new row with the list data provided.
     """
-    print(f"Updating {worksheet} updated successfully!\n")
+    print(f"Updating {worksheet} ...\n")
     surplus_worksheet = SHEET.worksheet(worksheet)
     surplus_worksheet.append_row(data)
-    print(f"Surplus {worksheet} updated successfully!\n")
+    print(f"The {worksheet} worksheet was successfully updated!\n")
 
 def calculate_surplus_data(sales_row):
     """
@@ -77,6 +79,19 @@ def calculate_surplus_data(sales_row):
         surplus_data.append(surplus)
     return surplus_data
 
+def get_last_5_entries_sales():
+    """
+    Collects columns of data from sales worksheet
+    """
+    sales = SHEET.worksheet("sales")
+    # column = sales.col_values(3)
+    # print(column)
+    columns = []
+    for ind in range(1, 7):
+        column = sales.col_values(ind)
+        columns.append(column[-5:])
+    pprint(columns)
+
 
 def main():
     """
@@ -90,4 +105,7 @@ def main():
 
 
 print("Welcome to Loce Sandwiches Data Automation.")
-main()
+
+#main()
+
+get_last_5_entries_sales()
